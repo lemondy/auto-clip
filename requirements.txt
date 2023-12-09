@@ -1,0 +1,2 @@
+moviepy==1.0.3
+scikit-image==0.22.0

@@ -22,7 +22,8 @@ def reset_size_blur(video_path: str) -> mp.VideoFileClip:
     """
     video = mp.VideoFileClip(video_path, audio=False, has_mask="True").resize(4)
     # 将视频放大并加蒙版遮罩
-    video_blur = video.image_transform(blur)
+    video_blur = video.fl_image(blur) #video.image_transform(blur)
+    
     # 将小的视频叠在大视频的居中位置
     concat_video = CompositeVideoClip([video_blur, video.set_pos("center")])
     # 对叠好的视频进行剪切
@@ -103,15 +104,7 @@ if __name__ == "__main__":
     final_videos = concat_video(video_list)
     final_videos.write_videofile(args.out, 
                                  fps=30, 
-                                 codec="h264_nvenc", 
-                                 threads=15, 
-                                 bitrate="1000k",
-                                 ffmpeg_params=[
-                                     "-tile-columns", "6",
-                                     "-frame-parallel", "0",
-                                     "-auto-alt-ref", "1",
-                                     "-lag-in-frames", "25",
-                                     "-g", "128",
-                                     "-pix_fmt", "yuv420p",
-                                     "-row-mt", "1"
-                                 ])
+                                 preset="ultrafast",
+                
+                                 threads=30, 
+                                 bitrate="1000k")
